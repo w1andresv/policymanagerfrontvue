@@ -8,7 +8,7 @@ import App from "./App.vue";
 import router from "./router";
 import PrimeVue from "primevue/config";
 import { components } from "./primevue";
-
+import StyleClass from 'primevue/styleclass';
 export const app = createApp(App);
 app.use(router);
 app.use(PrimeVue);
@@ -16,4 +16,7 @@ Object.entries(components).forEach(([name, component]) =>
 	app.component(name, component)
 );
 
+
+
+app.directive('styleclass', StyleClass);
 app.mount("#app");

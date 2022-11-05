@@ -15,6 +15,7 @@ import Toolbar from "primevue/toolbar";
 import Divider from "primevue/divider";
 import CascadeSelect from "primevue/cascadeselect";
 import Listbox from 'primevue/listbox';
+import Badge from 'primevue/badge';
 
 export const components = {
   Image,
@@ -33,5 +34,6 @@ export const components = {
   Toolbar,
   Divider,
   CascadeSelect,
-  Listbox
+  Listbox,
+  Badge
 };

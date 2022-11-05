@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-defineProps<{ msg: string, msg2?: string }>();
+defineProps<{ msg?: string, msg2?: string }>();
 
 const count = ref( 0 );
 </script>
@@ -18,7 +18,7 @@ const count = ref( 0 );
     <Button label="Warning" class="p-button-warning" />
     <Button label="Warning" class="p-button-help" />
     <Button label="Danger" class="p-button-danger" />
-    
+
   </div>
 </template>
 

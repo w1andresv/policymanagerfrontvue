@@ -22,7 +22,7 @@ const router = createRouter({
 			component: () => import("../pages/LoginView.vue"),
 		},
 		{
-			path: "/notFound*",
+			path: "/notfound",
 			name: "notFound",
 			component: () => import("../pages/NotFoundView.vue"),
 		},

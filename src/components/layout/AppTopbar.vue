@@ -1,9 +1,11 @@
 <script setup lang="ts">
+const emit = defineEmits( [ 'menu-toggle', 'topbar-menu-toggle' ] )
+
 const onMenuToggle = ( event: any ) => {
-  // $emit('menu-toggle', event);
+  emit( 'menu-toggle', event );
 };
-const onTopbarMenuToggle = ( event:any ) => {
-  // this.$emit('topbar-menu-toggle', event);
+const onTopbarMenuToggle = ( event: any ) => {
+  emit( 'topbar-menu-toggle', event );
 };
 const topbarImage = () => {
   // return this.$appState.darkTheme ? 'images/logo-white.svg' : 'images/logo-dark.svg';
@@ -21,9 +23,11 @@ const topbarImage = () => {
       <i class="pi pi-bars"></i>
     </button>
 
-    <button class="p-link layout-topbar-menu-button layout-topbar-button" >
-      <i class="pi pi-ellipsis-v"></i>
-    </button>
+  	<button class="p-link layout-topbar-menu-button layout-topbar-button"
+			v-styleclass="{ selector: '@next', enterClass: 'hidden', enterActiveClass: 'scalein', 
+			leaveToClass: 'hidden', leaveActiveClass: 'fadeout', hideOnOutsideClick: true}">
+			<i class="pi pi-ellipsis-v"></i>
+		</button>
     <ul class="layout-topbar-menu hidden lg:flex origin-top">
       <li>
         <button class="p-link layout-topbar-button">

@@ -1,20 +1,47 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, onBeforeUpdate } from "vue";
+import AppMenu from '../src/components/layout/AppMenu.vue'
+import AppTopBar from '../src/components/layout/AppTopbar.vue'
+
 const layoutMode = ref( 'static' );
 const staticMenuInactive = ref( false );
 const overlayMenuActive = ref( false );
 const mobileMenuActive = ref( false );
-const containerClass = () => {
+const menu = <any> ref( [
+  {
+    label: 'Home',
+    items: [ {
+      label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'
+    } ]
+  },
+  {
+    label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
+    items: [
+      { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/formlayout' },
+
+    ]
+  },
+  {
+    label: 'Pages', icon: 'pi pi-fw pi-clone',
+    items: [
+      { label: 'Login', icon: 'pi pi-fw pi-sign-in', to: '/login' },
+      { label: 'Error', icon: 'pi pi-fw pi-times-circle', to: '/error' },
+      { label: 'Not Found', icon: 'pi pi-fw pi-exclamation-circle', to: '/notfound' },
+      { label: 'Access Denied', icon: 'pi pi-fw pi-lock', to: '/access' },
+    ]
+  }
+] );
+const containerClass = computed( () => {
   return [ 'layout-wrapper', {
     'layout-overlay': layoutMode.value === 'overlay',
     'layout-static': layoutMode.value === 'static',
-    'layout-static-sidebar-inactive': staticMenuInactive && layoutMode.value === 'static',
-    'layout-overlay-sidebar-active': overlayMenuActive && layoutMode.value === 'overlay',
-    'layout-mobile-sidebar-active': mobileMenuActive,
+    'layout-static-sidebar-inactive': staticMenuInactive.value && layoutMode.value === 'static',
+    'layout-overlay-sidebar-active': overlayMenuActive.value && layoutMode.value === 'overlay',
+    'layout-mobile-sidebar-active': mobileMenuActive.value,
     'p-input-filled': true,
     'p-ripple-disabled': false
   } ];
-}
+} );
 const onWrapperClick = () => {
   overlayMenuActive.value = false;
   mobileMenuActive.value = false;
@@ -23,7 +50,7 @@ const isDesktop = () => {
   return window.innerWidth >= 992;
 };
 
-const onMenuToggle = () => {
+const onMenuToggle = ( event: any ) => {
 
   if ( isDesktop() ) {
     if ( layoutMode.value === 'overlay' ) {
@@ -37,25 +64,58 @@ const onMenuToggle = () => {
       staticMenuInactive.value = !staticMenuInactive.value;
     }
   } else {
-    mobileMenuActive.value = !mobileMenuActive.value;
+    if ( mobileMenuActive.value ) {
+      mobileMenuActive.value = false;
+    } else {
+      mobileMenuActive.value = true;
+    }
   }
-
   event.preventDefault();
+
 }
+const onSidebarClick = () => {
+};
+const onMenuItemClick = ( event: any ) => {
+  if ( event.item && !event.item.items ) {
+    overlayMenuActive.value = false;
+    mobileMenuActive.value = false;
+  }
+};
+const addClass = ( element: any, className: any ) => {
+  if ( element.classList )
+    element.classList.add( className );
+  else
+    element.className += ' ' + className;
+};
+const removeClass = ( element: any, className: any ) => {
+  if ( element.classList )
+    element.classList.remove( className );
+  else
+    element.className = element.className.replace( new RegExp( '(^|\\b)' + className.split( ' ' ).join( '|' ) + '(\\b|$)', 'gi' ), ' ' );
+};
+
+onBeforeUpdate( () => {
+  if ( mobileMenuActive.value ){
+    addClass( document.body, 'body-overflow-hidden' );
+   } else{
+    removeClass( document.body, 'body-overflow-hidden' );
+   }
+} );
+
 
 </script>
 <template>
-  <div :class=" containerClass " @click=" onWrapperClick ">
+  <div :class=" containerClass " @click=" onWrapperClick() ">
     <AppTopBar @menu-toggle=" onMenuToggle " />
-    <!-- <div class="layout-sidebar" @click=" onSidebarClick "> -->
-      <!-- <AppMenu :model="menu" @menuitem-click="onMenuItemClick"/> -->
-    <!-- </div> -->
+    <div class="layout-sidebar" @click=" onSidebarClick() ">
+      <AppMenu :model=" menu " @menuitem-click=" onMenuItemClick " />
+    </div>
 
     <div class="layout-main-container">
       <div class="layout-main">
         <router-view />
       </div>
-      <AppFooter />
+      <!-- <AppFooter /> -->
     </div>
 
     <transition name="layout-mask">
@@ -64,17 +124,8 @@ const onMenuToggle = () => {
   </div>
 </template>
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.p-toast.p-toast-top-right {
+  z-index: 1000;
+  top: 7rem;
 }
 </style>

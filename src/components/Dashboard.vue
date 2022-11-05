@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref , onMounted} from 'vue'
 import AppTopbar from './layout/AppTopbar.vue';
 const tittle = ref( 'Welcome' );
+onMounted(() => {
+console.log('onMounted dashboard');
+
+});
 </script>
 <template>
   <AppTopbar></AppTopbar>
