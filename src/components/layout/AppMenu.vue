@@ -2,9 +2,11 @@
 
 <script setup lang="ts">
 import AppSubmenu from './AppSubmenu.vue'
+import { MenuModelInterface } from '../../models/MenuMode.interface';
 const emit = defineEmits( [ 'menuitem-click' ] )
+
 const props = defineProps( {
-  model: []
+  model: Array<MenuModelInterface>
 } );
 
 const onMenuItemClick = ( event: any ) => {

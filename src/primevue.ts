@@ -16,6 +16,7 @@ import Divider from "primevue/divider";
 import CascadeSelect from "primevue/cascadeselect";
 import Listbox from 'primevue/listbox';
 import Badge from 'primevue/badge';
+import Password from 'primevue/password';
 
 export const components = {
   Image,
@@ -35,5 +36,6 @@ export const components = {
   Divider,
   CascadeSelect,
   Listbox,
-  Badge
+  Badge,
+  Password
 };

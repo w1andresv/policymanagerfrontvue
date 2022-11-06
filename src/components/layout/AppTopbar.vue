@@ -1,15 +1,19 @@
 <script setup lang="ts">
-const emit = defineEmits( [ 'menu-toggle', 'topbar-menu-toggle' ] )
+import { ref, computed } from 'vue'
+
+const showOptions = ref( false );
+const emit = defineEmits( [ 'menu-toggle' ] )
+
 
 const onMenuToggle = ( event: any ) => {
   emit( 'menu-toggle', event );
 };
-const onTopbarMenuToggle = ( event: any ) => {
-  emit( 'topbar-menu-toggle', event );
-};
-const topbarImage = () => {
-  // return this.$appState.darkTheme ? 'images/logo-white.svg' : 'images/logo-dark.svg';
+const onClick = () => {
+  showOptions.value = !showOptions.value;
 }
+const classOptions = computed( () => {
+  return `${ !showOptions.value ? 'hidden' : '' }`;
+} )
 
 </script>
 
@@ -23,12 +27,10 @@ const topbarImage = () => {
       <i class="pi pi-bars"></i>
     </button>
 
-  	<button class="p-link layout-topbar-menu-button layout-topbar-button"
-			v-styleclass="{ selector: '@next', enterClass: 'hidden', enterActiveClass: 'scalein', 
-			leaveToClass: 'hidden', leaveActiveClass: 'fadeout', hideOnOutsideClick: true}">
-			<i class="pi pi-ellipsis-v"></i>
-		</button>
-    <ul class="layout-topbar-menu hidden lg:flex origin-top">
+    <button class="p-link layout-topbar-menu-button layout-topbar-button" @click=" onClick ">
+      <i class="pi pi-ellipsis-v"></i>
+    </button>
+    <ul class="layout-topbar-menu lg:flex origin-top" :class=" classOptions ">
       <li>
         <button class="p-link layout-topbar-button">
           <i class="pi pi-calendar"></i>
@@ -51,3 +53,15 @@ const topbarImage = () => {
   </div>
 </template>
 
+<style scoped>
+@media (min-width: 992px) {
+  .hidden {
+    display: flex !important;
+  }
+}
+@media (max-width: 991px) {
+  .hidden {
+    display: none !important;
+  }
+}
+</style>

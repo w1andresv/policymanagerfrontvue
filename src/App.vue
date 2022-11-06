@@ -1,80 +1,88 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUpdate } from "vue";
-import AppMenu from '../src/components/layout/AppMenu.vue'
-import AppTopBar from '../src/components/layout/AppTopbar.vue'
+import AppMenu from "../src/components/layout/AppMenu.vue";
+import AppTopBar from "../src/components/layout/AppTopbar.vue";
 
-const layoutMode = ref( 'static' );
+const layoutMode = ref( "static" );
 const staticMenuInactive = ref( false );
 const overlayMenuActive = ref( false );
 const mobileMenuActive = ref( false );
 const menu = <any> ref( [
   {
-    label: 'Home',
-    items: [ {
-      label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'
-    } ]
+    label: "Home",
+    items: [
+      {
+        label: "Dashboard",
+        icon: "pi pi-fw pi-home",
+        to: "/",
+      },
+    ],
   },
   {
-    label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
+    label: "UI Components",
+    icon: "pi pi-fw pi-sitemap",
     items: [
-      { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/formlayout' },
-
-    ]
+      {
+        label: "Form Layout",
+        icon: "pi pi-fw pi-id-card",
+        to: "/formlayout",
+      },
+    ],
   },
   {
-    label: 'Pages', icon: 'pi pi-fw pi-clone',
+    label: "Pages",
+    icon: "pi pi-fw pi-clone",
     items: [
-      { label: 'Login', icon: 'pi pi-fw pi-sign-in', to: '/login' },
-      { label: 'Error', icon: 'pi pi-fw pi-times-circle', to: '/error' },
-      { label: 'Not Found', icon: 'pi pi-fw pi-exclamation-circle', to: '/notfound' },
-      { label: 'Access Denied', icon: 'pi pi-fw pi-lock', to: '/access' },
-    ]
-  }
+      { label: "Login", icon: "pi pi-fw pi-sign-in", to: "/login" },
+      { label: "Error", icon: "pi pi-fw pi-times-circle", to: "/error" },
+      {
+        label: "Not Found",
+        icon: "pi pi-fw pi-exclamation-circle",
+        to: "/notfound",
+      },
+      { label: "Access Denied", icon: "pi pi-fw pi-lock", to: "/access" },
+    ],
+  },
 ] );
 const containerClass = computed( () => {
-  return [ 'layout-wrapper', {
-    'layout-overlay': layoutMode.value === 'overlay',
-    'layout-static': layoutMode.value === 'static',
-    'layout-static-sidebar-inactive': staticMenuInactive.value && layoutMode.value === 'static',
-    'layout-overlay-sidebar-active': overlayMenuActive.value && layoutMode.value === 'overlay',
-    'layout-mobile-sidebar-active': mobileMenuActive.value,
-    'p-input-filled': true,
-    'p-ripple-disabled': false
-  } ];
+return[
+    "layout-wrapper p-input-filled",
+    {
+      "layout-overlay": layoutMode.value === "overlay",
+      "layout-static": layoutMode.value === "static",
+      "layout-static-sidebar-inactive": staticMenuInactive.value===true&& layoutMode.value === "static",
+      "layout-overlay-sidebar-active": overlayMenuActive.value===true && layoutMode.value === "overlay",
+      "layout-mobile-sidebar-active": mobileMenuActive.value===true
+    }
+  ]
+  
 } );
-const onWrapperClick = () => {
-  overlayMenuActive.value = false;
-  mobileMenuActive.value = false;
-};
 const isDesktop = () => {
   return window.innerWidth >= 992;
 };
 
 const onMenuToggle = ( event: any ) => {
-
+  event.preventDefault();
   if ( isDesktop() ) {
-    if ( layoutMode.value === 'overlay' ) {
+    if ( layoutMode.value === "overlay" ) {
       if ( mobileMenuActive.value === true ) {
         overlayMenuActive.value = true;
       }
-
       overlayMenuActive.value = !overlayMenuActive.value;
       mobileMenuActive.value = false;
-    } else if ( layoutMode.value === 'static' ) {
+    } else if ( layoutMode.value === "static" ) {
       staticMenuInactive.value = !staticMenuInactive.value;
     }
   } else {
-    if ( mobileMenuActive.value ) {
+    if ( mobileMenuActive.value===true ) {
       mobileMenuActive.value = false;
     } else {
       mobileMenuActive.value = true;
     }
   }
-  event.preventDefault();
-
-}
-const onSidebarClick = () => {
+ 
 };
+const onSidebarClick = () => { };
 const onMenuItemClick = ( event: any ) => {
   if ( event.item && !event.item.items ) {
     overlayMenuActive.value = false;
@@ -82,42 +90,41 @@ const onMenuItemClick = ( event: any ) => {
   }
 };
 const addClass = ( element: any, className: any ) => {
-  if ( element.classList )
-    element.classList.add( className );
-  else
-    element.className += ' ' + className;
+  if ( element.classList ) element.classList.add( className );
+  else element.className += " " + className;
 };
 const removeClass = ( element: any, className: any ) => {
-  if ( element.classList )
-    element.classList.remove( className );
+  if ( element.classList ) element.classList.remove( className );
   else
-    element.className = element.className.replace( new RegExp( '(^|\\b)' + className.split( ' ' ).join( '|' ) + '(\\b|$)', 'gi' ), ' ' );
+    element.className = element.className.replace(
+      new RegExp(
+        "(^|\\b)" + className.split( " " ).join( "|" ) + "(\\b|$)",
+        "gi"
+      ),
+      " "
+    );
 };
 
 onBeforeUpdate( () => {
-  if ( mobileMenuActive.value ){
-    addClass( document.body, 'body-overflow-hidden' );
-   } else{
-    removeClass( document.body, 'body-overflow-hidden' );
-   }
+  if ( mobileMenuActive.value ) {
+    addClass( document.body, "body-overflow-hidden" );
+  } else {
+    removeClass( document.body, "body-overflow-hidden" );
+  }
 } );
-
-
 </script>
 <template>
-  <div :class=" containerClass " @click=" onWrapperClick() ">
+  <div :class=" containerClass " >
     <AppTopBar @menu-toggle=" onMenuToggle " />
-    <div class="layout-sidebar" @click=" onSidebarClick() ">
+    <div class="layout-sidebar" @click=" onSidebarClick ">
       <AppMenu :model=" menu " @menuitem-click=" onMenuItemClick " />
     </div>
-
     <div class="layout-main-container">
       <div class="layout-main">
         <router-view />
       </div>
       <!-- <AppFooter /> -->
     </div>
-
     <transition name="layout-mask">
       <div class="layout-mask p-component-overlay" v-if=" mobileMenuActive "></div>
     </transition>
